@@ -204,3 +204,6 @@ docker compose stop web
 docker compose run --rm --entrypoint "" web rm -rf /app/.venv
 uv sync
 ```
+
+
+test
