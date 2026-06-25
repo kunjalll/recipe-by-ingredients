@@ -59,6 +59,7 @@ def _format_results(results: list) -> list:
             "id": r["recipe"].id,
             "title": r["recipe"].title,
             "description": r["recipe"].description,
+            "instructions": r["recipe"].instructions,
             "score": r["score"],
             "tfidf_score": r["tfidf_score"],
             "coverage_score": r["coverage_score"],
