@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://postgres:postgres@localhost:5432/recipes"
     google_api_key: str | None = None
     gemini_model: str = "gemini-2.5-flash"
+    secret_key: str = "dev-secret-change-me"  # overridden by .env in real use
+    access_token_expire_minutes: int = 60 * 24
 
 
 settings = Settings()
