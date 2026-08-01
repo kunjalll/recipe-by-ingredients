@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.core.deps import get_db
+from app.core.deps import get_current_user_optional, get_db
+from app.models.user import User
 from app.schemas.recipe import RecipeCreate, RecipeRead, RecipeUpdate
+from app.services import history as history_service
 from app.services import recipe as recipe_service
 
 router = APIRouter(prefix="/recipes", tags=["recipes"])
@@ -14,8 +16,15 @@ def list_recipes(db: Session = Depends(get_db)):
 
 
 @router.get("/{recipe_id}", response_model=RecipeRead)
-def get_recipe(recipe_id: int, db: Session = Depends(get_db)):
-    return recipe_service.get_recipe(db, recipe_id)
+def get_recipe(
+    recipe_id: int,
+    db: Session = Depends(get_db),
+    current_user: User | None = Depends(get_current_user_optional),
+):
+    recipe = recipe_service.get_recipe(db, recipe_id)
+    if current_user is not None:
+        history_service.log_view(db, current_user.id, recipe_id)
+    return recipe
 
 
 @router.post("", response_model=RecipeRead, status_code=status.HTTP_201_CREATED)

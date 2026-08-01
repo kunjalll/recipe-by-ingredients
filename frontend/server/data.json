@@ -1,0 +1,29 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Diya",
+      "email": "diya@mail.com",
+      "password": "$2a$10$IieG6m5D4trdugQSaUHBhetY/k9id8mrEp9bBfh5Xf0Ku6EVht9Rq",
+      "saved": [],
+      "history": []
+    },
+    {
+      "id": 2,
+      "name": "diya",
+      "email": "diya2@mail.com",
+      "password": "$2a$10$euGqEvEUfDVzeemB8KTKgeQFrH8/Na59IMItMIfYXko36DMZ5I1CO",
+      "saved": [],
+      "history": []
+    },
+    {
+      "id": 3,
+      "name": "Diya",
+      "email": "diya4@mail.com",
+      "password": "$2a$10$eoGzqw1xYifQjjkx4BPeKuwxz3wzfVXGBItbGlnd5lQk76f8GKm4m",
+      "saved": [],
+      "history": []
+    }
+  ],
+  "nextUserId": 4
+}

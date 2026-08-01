@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, File, Query, UploadFile
 from sqlalchemy.orm import Session
 
-from app.core.deps import get_db
+from app.core.deps import get_current_user_optional, get_db
+from app.models.user import User
+from app.services import history as history_service
 from app.services import ingredient_detection as detection_service
 from app.services.matching import match_recipes
 
@@ -13,9 +15,14 @@ def match_by_ingredients(
     ingredients: list[str] = Query(...),
     top_n: int = Query(default=10, ge=1, le=50),
     db: Session = Depends(get_db),
+    current_user: User | None = Depends(get_current_user_optional),
 ):
     """Match recipes by a list of ingredient names (text input)."""
     results = match_recipes(db, ingredients, top_n)
+
+    if current_user is not None:
+        history_service.log_search(db, current_user.id, ingredients)
+
     return _format_results(results)
 
 
@@ -24,17 +31,14 @@ async def match_from_image(
     image: UploadFile = File(...),
     top_n: int = Query(default=10, ge=1, le=50),
     db: Session = Depends(get_db),
+    current_user: User | None = Depends(get_current_user_optional),
 ):
     """Upload an image → detect ingredients → return matching recipes."""
 
-    # Step 1: Read the image
     image_bytes = await image.read()
     mime_type = image.content_type or "application/octet-stream"
 
-    # Step 2: Detect ingredients using Gemini
     detection_result = detection_service.detect_ingredients(image_bytes, mime_type)
-
-    # Step 3: Extract ingredient names from detection result
     ingredient_names = [ing.name for ing in detection_result.ingredients]
 
     if not ingredient_names:
@@ -44,8 +48,10 @@ async def match_from_image(
             "message": "No ingredients detected in the image",
         }
 
-    # Step 4: Run matching algorithm
     results = match_recipes(db, ingredient_names, top_n)
+
+    if current_user is not None:
+        history_service.log_search(db, current_user.id, ingredient_names)
 
     return {
         "detected_ingredients": ingredient_names,

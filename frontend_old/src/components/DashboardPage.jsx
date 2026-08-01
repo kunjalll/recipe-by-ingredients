@@ -42,6 +42,7 @@ export default function DashboardPage({ savedRecipes, onNavigate }) {
       <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(220px,1fr))', gap:12, marginBottom:32 }}>
         {[
           { icon:'🔍', label:'Search by ingredients', desc:'Find recipes using what you have',   page:'search', bg:'#FFF0E8' },
+          { icon:'📅', label:'Plan your week',         desc:'Build a 7-day meal plan',           page:'planner',bg:'#E1F5EE' },
           { icon:'❤️', label:'View saved recipes',     desc:`${savedCount} recipe${savedCount!==1?'s':''} bookmarked`, page:'saved', bg:'#FAEEDA' },
         ].map(a => (
           <div key={a.label} onClick={()=>onNavigate(a.page)}
@@ -64,7 +65,7 @@ export default function DashboardPage({ savedRecipes, onNavigate }) {
             <span style={{ fontSize:32 }}>{r.emoji}</span>
             <div style={{ flex:1 }}>
               <div style={{ fontWeight:600, color:'#1A1612', fontSize:14 }}>{r.title}</div>
-              <div style={{ color:'#8A7E74', fontSize:12, marginTop:2 }}>{r.cuisine}</div>
+              <div style={{ color:'#8A7E74', fontSize:12, marginTop:2 }}>⏱ {r.time} min · {r.cuisine} · {r.calories} cal</div>
             </div>
             <DifficultyBadge level={r.difficulty} />
             <span style={{ fontSize:12, color:'#E8591A', fontWeight:600 }}>★ {r.rating}</span>

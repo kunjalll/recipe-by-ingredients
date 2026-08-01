@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.auth import router as auth_router
+from app.api.favorites import router as favorites_router
+from app.api.history import router as history_router
 from app.api.ingredients import router as ingredients_router
 from app.api.matching import router as matching_router
 from app.api.recipes import router as recipes_router
@@ -18,6 +20,8 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(favorites_router)
+app.include_router(history_router)
 app.include_router(recipes_router)
 app.include_router(ingredients_router)
 app.include_router(matching_router)

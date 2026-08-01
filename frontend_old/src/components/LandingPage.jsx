@@ -71,6 +71,7 @@ export default function LandingPage({ onNavigate }) {
     { label:'All',          icon:'✨', active:true  },
     { label:'Veg',          icon:'🌱', active:false },
     { label:'Non-veg',      icon:'🍖', active:false },
+    { label:'Under 30 min', icon:'⏱️', active:false },
   ]);
 
   // ── Filtering ─────────────────────────────────────────────────────────────
@@ -79,10 +80,12 @@ export default function LandingPage({ onNavigate }) {
     const t = setTimeout(() => {
       const isVeg     = filters.find(f => f.label === 'Veg')?.active;
       const isNonVeg  = filters.find(f => f.label === 'Non-veg')?.active;
+      const isUnder30 = filters.find(f => f.label === 'Under 30 min')?.active;
 
       const applyFilters = (list) => list.filter(r => {
         if (isVeg     && !r.isVeg)     return false;
         if (isNonVeg  &&  r.isVeg)     return false;
+        if (isUnder30 && r.time >= 30) return false;
         if (searchQuery && !r.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
         return true;
       });
@@ -509,7 +512,7 @@ export default function LandingPage({ onNavigate }) {
                     display:'flex', justifyContent:'space-between',
                     fontSize:12, color:'#8A7E74',
                   }}>
-                    <span>{recipe.cuisine}</span>
+                    <span>⏱ {recipe.time} min</span>
                     <span style={{ color:'#E8591A', fontWeight:600 }}>★ {recipe.rating}</span>
                   </div>
                 </div>
@@ -577,7 +580,7 @@ export default function LandingPage({ onNavigate }) {
                     </h4>
                     <p style={{ margin:'0 0 6px', fontSize:11, color:'#8A7E74' }}>By {recipe.author}</p>
                     <div style={{ display:'flex', justifyContent:'space-between', fontSize:11, color:'#8A7E74' }}>
-                      <span>{recipe.cuisine}</span>
+                      <span>⏱ {recipe.time} min</span>
                       <span style={{ color:'#E8591A', fontWeight:600 }}>★ {recipe.rating}</span>
                     </div>
                   </div>

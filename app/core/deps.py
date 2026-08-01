@@ -19,6 +19,7 @@ def get_db() -> Generator[Session]:
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+oauth2_scheme_optional = OAuth2PasswordBearer(tokenUrl="auth/login", auto_error=False)
 
 
 def get_current_user(
@@ -44,3 +45,21 @@ def get_current_user(
         raise credentials_exception
 
     return user
+
+
+def get_current_user_optional(
+    token: str | None = Depends(oauth2_scheme_optional),
+    db: Session = Depends(get_db),
+) -> User | None:
+    if token is None:
+        return None
+
+    payload = decode_access_token(token)
+    if payload is None:
+        return None
+
+    email = payload.get("sub")
+    if email is None:
+        return None
+
+    return get_user_by_email(db, email)
