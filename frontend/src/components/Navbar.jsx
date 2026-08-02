@@ -33,7 +33,6 @@ export default function Navbar({
     { id: 'saved',     label: 'Saved',       icon: '❤️', badge: savedCount },
     { id: 'dashboard', label: 'Dashboard',   icon: '📊' },
   ].filter(item => {
-    // hide history and saved when not logged in
     if (!isLoggedIn && (item.id === 'history' || item.id === 'saved')) return false;
     return true;
   });
@@ -48,8 +47,8 @@ export default function Navbar({
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 20px', height: 60, display: 'flex', alignItems: 'center', gap: 4 }}>
 
         {/* Logo */}
-        <div onClick={() => onNavigate('home')} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', marginRight: 16 }}>
-          <span style={{ fontSize: 22 }}>🌱</span>
+        <div onClick={() => onNavigate('home')} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', marginRight: 16, flexShrink: 0 }}>
+          <img src="/navbar-logo.png" alt="CookByIngredients" style={{ height: 28, width: 'auto', display: 'block' }} />
           <span style={{ fontWeight: 800, fontSize: 16, color: '#E8591A', letterSpacing: -0.5 }}>
             CookByIngredients
           </span>
@@ -61,8 +60,8 @@ export default function Navbar({
           aria-label="Open menu"
           className="hamburger"
           style={{
-            display: 'none', // visible via CSS on small screens
-            width: 40, height: 40, borderRadius: 10, border: 'none', background: 'transparent', cursor: 'pointer', marginRight: 8, fontSize: 20
+            display: 'none',
+            width: 40, height: 40, borderRadius: 10, border: 'none', background: 'transparent', cursor: 'pointer', marginRight: 8, fontSize: 20, flexShrink: 0,
           }}
         >
           ☰
@@ -99,7 +98,7 @@ export default function Navbar({
           ))}
         </div>
 
-        {/* Dark mode toggle */}
+        {/* Dark mode toggle — marginLeft:auto pushes this + everything after it to the right on mobile, where nav-links no longer provides that spacing */}
         <button
           onClick={onToggleDark}
           style={{
@@ -108,7 +107,7 @@ export default function Navbar({
             background: darkMode ? '#2A2520' : '#F4F0E8',
             cursor: 'pointer', fontSize: 18,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            marginRight: 12,
+            marginRight: 12, marginLeft: 'auto', flexShrink: 0,
           }}
         >
           {darkMode ? '☀️' : '🌙'}
@@ -116,14 +115,14 @@ export default function Navbar({
 
         {/* Auth area */}
         {isLoggedIn ? (
-          <div ref={menuRef} style={{ position: 'relative' }}>
+          <div ref={menuRef} style={{ position: 'relative', flexShrink: 0 }}>
             <button
               onClick={() => setMenuOpen(o => !o)}
               style={{
                 width: 36, height: 36, borderRadius: '50%',
                 background: '#E8591A', color: '#fff', border: 'none',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontWeight: 700, fontSize: 14, cursor: 'pointer',
+                fontWeight: 700, fontSize: 14, cursor: 'pointer', flexShrink: 0,
               }}
             >
               {(user?.name || 'U').charAt(0).toUpperCase()}
@@ -145,61 +144,47 @@ export default function Navbar({
                     {user?.email}
                   </div>
                 </div>
-                <button
-                  onClick={() => { onNavigate('profile'); setMenuOpen(false); }}
-                  style={menuItemStyle(darkMode)}
-                >
+                <button onClick={() => { onNavigate('profile'); setMenuOpen(false); }} style={menuItemStyle(darkMode)}>
                   👤 My profile
                 </button>
-                <button
-                  onClick={() => { onNavigate('dashboard'); setMenuOpen(false); }}
-                  style={menuItemStyle(darkMode)}
-                >
+                <button onClick={() => { onNavigate('dashboard'); setMenuOpen(false); }} style={menuItemStyle(darkMode)}>
                   📊 Dashboard
                 </button>
-                <button
-                  onClick={() => { onLogout(); setMenuOpen(false); }}
-                  style={{ ...menuItemStyle(darkMode), color: '#E8591A' }}
-                >
+                <button onClick={() => { onLogout(); setMenuOpen(false); }} style={{ ...menuItemStyle(darkMode), color: '#E8591A' }}>
                   ↪ Log out
                 </button>
               </div>
             )}
           </div>
         ) : (
-          <div className="desktop-auth-buttons" style={{ display: 'flex', gap: 8 }}>
-            <button
-              onClick={onLogin}
-              style={{
-                padding: '7px 16px', borderRadius: 10,
-                border: `1px solid ${darkMode ? '#3A342C' : '#E4DDD0'}`,
-                background: 'transparent',
-                color: darkMode ? '#EDE8DF' : '#4A3F35',
-                fontWeight: 600, fontSize: 14, cursor: 'pointer',
-                whiteSpace: 'nowrap',
-              }}
-            >
+          <div className="desktop-auth-buttons" style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+            <button onClick={onLogin} style={{
+              padding: '7px 16px', borderRadius: 10,
+              border: `1px solid ${darkMode ? '#3A342C' : '#E4DDD0'}`,
+              background: 'transparent',
+              color: darkMode ? '#EDE8DF' : '#4A3F35',
+              fontWeight: 600, fontSize: 14, cursor: 'pointer',
+              whiteSpace: 'nowrap',
+            }}>
               Log in
             </button>
-            <button
-              onClick={onRegister}
-              style={{
-                padding: '7px 16px', borderRadius: 10, border: 'none',
-                background: '#E8591A', color: '#fff',
-                fontWeight: 700, fontSize: 14, cursor: 'pointer',
-                whiteSpace: 'nowrap',
-              }}
-            >
+            <button onClick={onRegister} style={{
+              padding: '7px 16px', borderRadius: 10, border: 'none',
+              background: '#E8591A', color: '#fff',
+              fontWeight: 700, fontSize: 14, cursor: 'pointer',
+              whiteSpace: 'nowrap',
+            }}>
               Sign up
             </button>
           </div>
         )}
+
       <div className={`mobile-drawer ${mobileOpen ? 'open' : ''}`} onClick={() => setMobileOpen(false)} aria-hidden={!mobileOpen}>
         <div className="backdrop" onClick={() => setMobileOpen(false)} />
         <div className="drawer-content" onClick={e => e.stopPropagation()} style={{ background: darkMode ? '#211D19' : '#fff', color: darkMode ? '#EDE8DF' : '#211D19' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 22 }}>🌱</span>
+                <img src="/navbar-logo.png" alt="CookByIngredients" style={{ height: 28, width: 'auto', display: 'block' }} />
                 <span style={{ fontWeight: 800, fontSize: 16, color: '#E8591A' }}>CookByIngredients</span>
               </div>
               <button onClick={() => setMobileOpen(false)} style={{ border: 'none', background: 'transparent', fontSize: 20, cursor: 'pointer' }}>×</button>
