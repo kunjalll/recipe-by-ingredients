@@ -167,7 +167,7 @@ export default function Navbar({
             )}
           </div>
         ) : (
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div className="desktop-auth-buttons" style={{ display: 'flex', gap: 8 }}>
             <button
               onClick={onLogin}
               style={{
