@@ -3,6 +3,10 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+html, body, #root {
+  overflow-x: hidden;
+  width: 100%;
+}
 :root{ --gap:12px; --card-min:180px }
 
 body {
